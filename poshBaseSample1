@@ -1,7 +1,8 @@
 
 # Note: Edited from 
 # https://foxdeploy.com/resources/ise-snippets/xaml-to-gui/ original XAML loader script
-
+Add-Type -AssemblyName presentationframework
+Add-Type -AssemblyName System.Windows.Forms
 # Change contents of here string to your XAML code from Visual Studio
 $RawXAML = Get-Content -Path $PSScriptRoot\MainWindow.xaml
  
