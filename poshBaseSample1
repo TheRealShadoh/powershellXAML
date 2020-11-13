@@ -1,0 +1,40 @@
+
+# Note: Edited from 
+# https://foxdeploy.com/resources/ise-snippets/xaml-to-gui/ original XAML loader script
+
+# Change contents of here string to your XAML code from Visual Studio
+$RawXAML = Get-Content -Path $PSScriptRoot\MainWindow.xaml
+ 
+[void][System.Reflection.Assembly]::LoadWithPartialName('PresentationFramework')
+[xml]$XAML = $RawXAML -replace 'mc:Ignorable="d"','' -replace "x:N",'N'  -replace '^<Win.*', '<Window'
+
+#Read XAML 
+$XAMLReader= New-Object System.Xml.XmlNodeReader $XAML
+try{
+    $Form=[Windows.Markup.XamlReader]::Load($XAMLReader)
+} catch {
+    Throw "Unable to load Windows.Markup.XamlReader. Double-check syntax and ensure .net is installed."
+}
+ 
+#===========================================================================
+# Load XAML Objects In PowerShell
+#===========================================================================
+ 
+$XAML.SelectNodes("//*[@Name]") |
+ForEach-Object {
+    Set-Variable -Name "WPF$($_.Name)" -Value $Form.FindName($_.Name)
+}
+
+Get-Variable WPF* # Will show you the form variables
+
+#===========================================================================
+# Events
+#===========================================================================
+
+
+#===========================================================================
+# Shows the form
+#===========================================================================
+$Form.ShowDialog() | Out-Null
+
+
