@@ -1,0 +1,35 @@
+#vs2019 built template
+
+function Add-ControlVariables {
+	
+New-Variable -Name 'declineRisk' -Value $window.FindName('declineRisk') -Scope 1 -Force
+}
+
+function Load-Xaml {
+	[xml]$xaml = Get-Content -Path $PSScriptRoot\ImageCustomizer.xaml
+	$manager = New-Object System.Xml.XmlNamespaceManager -ArgumentList $xaml.NameTable
+	$manager.AddNamespace("x", "http://schemas.microsoft.com/winfx/2006/xaml");
+	$xaml.SelectNodes("//*[@x:Name='declineRisk']", $manager)[0].RemoveAttribute('Click')
+	$xamlReader = New-Object System.Xml.XmlNodeReader $xaml
+	[Windows.Markup.XamlReader]::Load($xamlReader)
+}
+
+function Set-EventHandlers {
+
+	$declineRisk.add_Click({
+		param([System.Object]$sender,[System.Windows.RoutedEventArgs]$e)
+		declineRisk_Click($sender,$e)
+	})
+}
+
+$window = Load-Xaml
+Add-ControlVariables
+Set-EventHandlers
+
+function declineRisk_Click
+{
+	param($sender, $e)
+}
+
+
+$window.ShowDialog()
