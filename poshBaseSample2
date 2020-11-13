@@ -1,5 +1,6 @@
 #vs2019 built template
-
+Add-Type -AssemblyName presentationframework
+Add-Type -AssemblyName System.Windows.Forms
 function Add-ControlVariables {
 	
 New-Variable -Name 'declineRisk' -Value $window.FindName('declineRisk') -Scope 1 -Force
